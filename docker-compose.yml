@@ -1,0 +1,6 @@
+services:
+  howsyourdayapi:
+    image: ${DOCKER_REGISTRY-}howsyourdayapi
+    build:
+      context: .
+      dockerfile: HowsYourDayApi/Dockerfile

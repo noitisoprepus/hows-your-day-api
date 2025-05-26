@@ -2,14 +2,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using HowsYourDayApi.DTOs.Account;
-using HowsYourDayAPI.Interfaces;
-using HowsYourDayAPI.Models;
+using HowsYourDayApi.Application.DTOs.Account;
+using HowsYourDayApi.Domain.Entities;
+using HowsYourDayApi.Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace HowsYourDayAPI.Services
+namespace HowsYourDayApi.Application.Services
 {
     public class TokenService : ITokenService
     {
@@ -29,7 +29,7 @@ namespace HowsYourDayAPI.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);

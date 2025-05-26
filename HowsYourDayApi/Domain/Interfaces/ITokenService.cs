@@ -1,7 +1,7 @@
-using HowsYourDayApi.DTOs.Account;
-using HowsYourDayAPI.Models;
+using HowsYourDayApi.Application.DTOs.Account;
+using HowsYourDayApi.Domain.Entities;
 
-namespace HowsYourDayAPI.Interfaces
+namespace HowsYourDayApi.Domain.Interfaces
 {
     public interface ITokenService
     {

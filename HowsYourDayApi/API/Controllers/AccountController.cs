@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using HowsYourDayAPI.Interfaces;
-using HowsYourDayApi.DTOs.Account;
+using HowsYourDayApi.Domain.Interfaces;
+using HowsYourDayApi.Application.DTOs.Account;
 
-namespace HowsYourDayAPI.Controllers
+namespace HowsYourDayApi.API.Controllers
 {
     [ApiController]
     [Route("account")]

@@ -1,9 +1,9 @@
-using HowsYourDayAPI.Models;
+using HowsYourDayApi.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace HowsYourDayAPI.Data
+namespace HowsYourDayApi.Infrastructure.Persistence
 {
     public class HowsYourDayAppDbContext: IdentityDbContext<AppUser>
     {

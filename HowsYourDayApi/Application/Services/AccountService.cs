@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Identity;
-using HowsYourDayAPI.Interfaces;
-using HowsYourDayAPI.Models;
-using HowsYourDayApi.DTOs.Account;
+using HowsYourDayApi.Domain.Interfaces;
+using HowsYourDayApi.Application.DTOs.Account;
+using HowsYourDayApi.Domain.Entities;
 
-namespace HowsYourDayAPI.Services
+namespace HowsYourDayApi.Application.Services
 {
     public class AccountService : IAccountService
     {

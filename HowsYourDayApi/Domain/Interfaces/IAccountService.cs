@@ -1,7 +1,7 @@
-using HowsYourDayApi.DTOs.Account;
+using HowsYourDayApi.Application.DTOs.Account;
 using Microsoft.AspNetCore.Identity;
 
-namespace HowsYourDayAPI.Interfaces
+namespace HowsYourDayApi.Domain.Interfaces
 {
     public interface IAccountService
     {

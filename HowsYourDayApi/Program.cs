@@ -1,8 +1,9 @@
 using DotNetEnv;
-using HowsYourDayAPI.Data;
-using HowsYourDayAPI.Interfaces;
-using HowsYourDayAPI.Models;
-using HowsYourDayAPI.Services;
+using HowsYourDayApi.Application.Services;
+using HowsYourDayApi.Domain.Entities;
+using HowsYourDayApi.Domain.Interfaces;
+using HowsYourDayApi.Infrastructure.Persistence;
+using HowsYourDayApi.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -115,9 +116,13 @@ namespace HowsYourDayApi
                 };
             });
 
+            builder.Services.AddAutoMapper(typeof(Program));
+
             builder.Services.AddScoped<IDayService, DayService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+
+            builder.Services.AddScoped<IDayRepository, DayRepository>();
 
             var app = builder.Build();
 

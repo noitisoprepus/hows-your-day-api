@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace HowsYourDayApi.DTOs.Day
+namespace HowsYourDayApi.Application.DTOs.Day
 {
     public class CreateDayDTO
     {
         [Required]
         public int Rating { get; set; }
-        public string? Comment { get; set; } = null;
+        public string? Note { get; set; } = null;
     }   
 }
