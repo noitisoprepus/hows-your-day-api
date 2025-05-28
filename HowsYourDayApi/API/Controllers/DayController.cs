@@ -79,11 +79,17 @@ namespace HowsYourDayApi.API.Controllers
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
 
-            var createdDay = await _dayService.AddDayForUserAsync(userId, day);
-            if (createdDay == null)
-                return BadRequest("You have already posted today.");
-            
-            return CreatedAtAction(nameof(GetDaysForUser), new { userId }, createdDay);
+            try
+            {
+                await _dayService.AddDayForUserAsync(userId, day);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"An error occurred while posting your day: {ex.Message}");
+            }
+
+            return Created();
+            //return CreatedAtAction(nameof(GetUserDayToday), new { userId });
         }
     }
 }

@@ -11,6 +11,6 @@ namespace HowsYourDayApi.Domain.Interfaces
         Task<bool> HasUserPostedTodayAsync(Guid userId);
         Task<CreateDayDTO> GetUserDayTodayAsync(Guid userId);
         Task<IEnumerable<Day>> GetDaysForUserAsync(Guid userId);
-        Task<Day?> AddDayForUserAsync(Guid userId, CreateDayDTO day);
+        Task AddDayForUserAsync(Guid userId, CreateDayDTO day);
     }
 }

@@ -1,88 +1,88 @@
 using HowsYourDayApi.Application.DTOs.Day;
 using HowsYourDayApi.Domain.Entities;
 using HowsYourDayApi.Domain.Interfaces;
-using HowsYourDayApi.Infrastructure.Persistence.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace HowsYourDayApi.Application.Services
 {
     public class DayService: IDayService
     {
-        private readonly HowsYourDayAppDbContext _context;
+        private readonly IDayRepository _dayRepository;
 
-        public DayService(HowsYourDayAppDbContext context)
+        public DayService(IDayRepository dayRepository)
         {
-            _context = context;
+            _dayRepository = dayRepository;
         }
 
         public async Task<IEnumerable<Day>> GetDaysAsync()
         {
-            return await _context.Days.ToListAsync();
+            return await _dayRepository.GetAllAsync();
         }
 
         public async Task<Day?> GetDayAsync(Guid dayId)
         {
-            return await _context.Days.FindAsync(dayId);
+            return await _dayRepository.GetByIdAsync(dayId);
         }
 
         public async Task<int> GetAverageRatingAsync()
         {
-            var postsToday = await _context.Days.Where(d => d.LogDateUtc == DateTime.UtcNow.Date).ToListAsync();
+            var entries = await _dayRepository.SearchAsync(searchDateFromUtc: DateTime.UtcNow.Date);
             
-            double sum = 0.0;
-            foreach(Day post in postsToday)
-                sum += post.Rating;
-            double average = sum / postsToday.Count;
+            double sum = entries.Sum(entry => entry.Rating);
+            double average = sum / entries.Count();
 
             return (int)Math.Round(average);
         }
 
         public async Task<bool> HasUserPostedTodayAsync(Guid userId)
         {
-            return await _context.Days.AnyAsync(d => d.UserId == userId &&
-                d.LogDateUtc.Date == DateTime.UtcNow.Date);
+            var entryToday = (await _dayRepository.SearchAsync(userId, DateTime.UtcNow)).SingleOrDefault();
+
+            return entryToday != null;
         }
 
         public async Task<CreateDayDTO> GetUserDayTodayAsync(Guid userId)
         {
-            var today = DateTime.UtcNow.Date;
-            var day = await _context.Days.FirstOrDefaultAsync(d => d.UserId == userId && d.LogDateUtc.Date == today);
-            if (day == null)
+            var entryToday = (await _dayRepository.SearchAsync(userId, DateTime.UtcNow)).SingleOrDefault();
+
+            var entryTodayDto = new CreateDayDTO();
+
+            if (entryToday != null)
             {
-                return new CreateDayDTO{
-                    Rating = 0,
-                };
+                entryTodayDto.Rating = entryToday.Rating;
+                entryTodayDto.Note = entryToday.Note;
             }
 
-            return new CreateDayDTO{
-                Rating = day.Rating,
-                Note = day.Note
-            };
+            return entryTodayDto;
         }
 
         public async Task<IEnumerable<Day>> GetDaysForUserAsync(Guid userId)
         {
-            return await _context.Days.Where(d => d.UserId == userId).ToListAsync();
+            // Retrieve all days for a specific user
+            return await _dayRepository.SearchAsync(userId);
         }
 
-        public async Task<Day?> AddDayForUserAsync(Guid userId, CreateDayDTO day)
+        public async Task AddDayForUserAsync(Guid userId, CreateDayDTO createDayDto)
         {
-            var today = DateTime.UtcNow.Date;
-            var hasPostedToday = await _context.Days
-                .AnyAsync(d => d.UserId == userId && d.LogDateUtc.Date == today);
-            if (hasPostedToday) return null;
+            if (userId == Guid.Empty)
+                throw new ArgumentException("User ID cannot be empty.", nameof(userId));
+            if (createDayDto == null)
+                throw new ArgumentNullException(nameof(createDayDto), "Day cannot be null.");
 
-            var newDay = new Day{
+            var hasPostedToday = await HasUserPostedTodayAsync(userId);
+
+            if (hasPostedToday)
+                throw new InvalidOperationException("User has already posted today.");
+
+            var newDayEntry = new Day
+            {
                 Id = Guid.NewGuid(),
                 UserId = userId,
                 LogDateUtc = DateTime.UtcNow,
-                Rating = day.Rating,
-                Note = day.Note
+                Rating = createDayDto.Rating,
+                Note = createDayDto.Note
             };
-            _context.Days.Add(newDay);
-            await _context.SaveChangesAsync();
-            
-            return newDay;
+
+            await _dayRepository.InsertAsync(newDayEntry);
         }
     }
 }
