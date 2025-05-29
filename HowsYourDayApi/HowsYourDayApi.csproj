@@ -24,7 +24,6 @@
   <ItemGroup>
     <Folder Include="Application\Mapping\" />
     <Folder Include="Domain\Events\" />
-    <Folder Include="Application\DTOs\" />
   </ItemGroup>
 
 </Project>

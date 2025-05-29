@@ -1,6 +1,6 @@
 namespace HowsYourDayApi.Domain.Entities
 {
-    public class Day
+    public class DayEntry
     {
         public Guid Id { get; set; }
         public Guid? UserId { get; set; }

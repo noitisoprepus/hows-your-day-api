@@ -9,27 +9,27 @@ namespace HowsYourDayApi.API.Controllers
 {
     [ApiController]
     [Authorize]
-    public class DayController : ControllerBase
+    public class DayEntryController : ControllerBase
     {
-        private readonly IDayService _dayService;
+        private readonly IDayEntryService _dayService;
 
-        public DayController(IDayService dayService)
+        public DayEntryController(IDayEntryService dayService)
         {
             _dayService = dayService;
         }
 
         [HttpGet("day")]
-        public async Task<ActionResult<IEnumerable<Day>>> GetDays()
+        public async Task<ActionResult<IEnumerable<DayEntry>>> GetDays()
         {
-            var days = await _dayService.GetDaysAsync();
+            var days = await _dayService.GetDayEntriesAsync();
             
             return Ok(days);
         }
 
         [HttpGet("day/{id}")]
-        public async Task<ActionResult<Day>> GetDay(Guid id)
+        public async Task<ActionResult<DayEntry>> GetDay(Guid id)
         {
-            var day = await _dayService.GetDayAsync(id);
+            var day = await _dayService.GetDayEntryAsync(id);
             if (day == null)
                 return NotFound();
             
@@ -55,33 +55,33 @@ namespace HowsYourDayApi.API.Controllers
         }
 
         [HttpGet("account/day/today")]
-        public async Task<ActionResult<CreateDayDTO>> GetUserDayToday()
+        public async Task<ActionResult<CreateDayEntryDto>> GetUserDayToday()
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
 
-            var dayToday = await _dayService.GetUserDayTodayAsync(userId);
+            var dayToday = await _dayService.GetDayEntryOfUserTodayAsync(userId);
 
             return Ok(dayToday);
         }
 
         [HttpGet("account/day")]
-        public async Task<ActionResult<IEnumerable<Day>>> GetDaysForUser()
+        public async Task<ActionResult<IEnumerable<DayEntry>>> GetDaysForUser()
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
 
-            var days = await _dayService.GetDaysForUserAsync(userId);
+            var days = await _dayService.GetDaysEntriesOfUserAsync(userId);
 
             return Ok(days);
         }
 
         [HttpPost("account/day")]
-        public async Task<ActionResult<Day>> PostDayForUser([FromBody] CreateDayDTO day)
+        public async Task<ActionResult<DayEntry>> PostDayForUser([FromBody] CreateDayEntryDto day)
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
 
             try
             {
-                await _dayService.AddDayForUserAsync(userId, day);
+                await _dayService.AddDayEntryOfUserAsync(userId, day);
             }
             catch(Exception ex)
             {

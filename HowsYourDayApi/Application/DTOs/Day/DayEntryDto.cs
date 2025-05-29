@@ -1,10 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace HowsYourDayApi.Application.DTOs.Day
 {
-    public class CreateDayDTO
+    public class DayEntryDto
     {
-        [Required]
+        public DateTime LogDate { get; set; }
         public int Rating { get; set; }
         public string? Note { get; set; } = null;
     }   
