@@ -16,19 +16,19 @@ namespace HowsYourDayApi.Infrastructure.Repositories
 
         public async Task<IEnumerable<DayEntry>> GetAllAsync()
         {
-            return await _context.Days.ToListAsync();
+            return await _context.DayEntries.ToListAsync();
         }
 
         public async Task<DayEntry> GetByIdAsync(Guid id)
         {
-            return await _context.Days
+            return await _context.DayEntries
                 .FirstOrDefaultAsync(day => day.Id == id)
                 ?? throw new KeyNotFoundException($"Day entry with ID {id} not found.");
         }
 
         public async Task<IEnumerable<DayEntry>> SearchAsync(Guid? userId = null, DateTime? searchDateFromUtc = null, DateTime? searchDateToUtc = null)
         {
-            return await _context.Days
+            return await _context.DayEntries
                 .Where(day => (!userId.HasValue || day.UserId == userId) &&
                               (!searchDateFromUtc.HasValue || day.LogDateUtc >= searchDateFromUtc) &&
                               (!searchDateToUtc.HasValue || day.LogDateUtc <= searchDateToUtc))
@@ -37,21 +37,21 @@ namespace HowsYourDayApi.Infrastructure.Repositories
 
         public async Task InsertAsync(DayEntry day)
         {
-            _context.Days.Add(day);
+            _context.DayEntries.Add(day);
 
             await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(DayEntry day)
         {
-            _context.Days.Update(day);
+            _context.DayEntries.Update(day);
 
             await _context.SaveChangesAsync();
         }
         
         public async Task DeleteAsync(DayEntry day)
         {
-            _context.Days.Remove(day);
+            _context.DayEntries.Remove(day);
 
             await _context.SaveChangesAsync();
         }

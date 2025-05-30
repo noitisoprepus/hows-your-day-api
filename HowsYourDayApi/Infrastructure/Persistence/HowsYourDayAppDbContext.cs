@@ -11,7 +11,8 @@ namespace HowsYourDayApi.Infrastructure.Persistence
         {
         }
 
-        public DbSet<DayEntry> Days { get; set; }
+        public DbSet<DayEntry> DayEntries { get; set; }
+        public DbSet<DaySummary> DaySummaries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
