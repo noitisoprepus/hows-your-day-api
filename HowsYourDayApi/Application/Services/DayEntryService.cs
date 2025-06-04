@@ -46,16 +46,6 @@ namespace HowsYourDayApi.Application.Services
             return entryDto;
         }
 
-        public async Task<int> GetAverageRatingAsync()
-        {
-            var entries = await _dayRepository.SearchAsync(searchDateFromUtc: DateTime.UtcNow.Date);
-            
-            double sum = entries.Sum(entry => entry.Rating);
-            double average = sum / entries.Count();
-
-            return (int)Math.Round(average);
-        }
-
         public async Task<bool> HasUserPostedTodayAsync(Guid userId)
         {
             var entryToday = (await _dayRepository.SearchAsync(userId, DateTime.UtcNow)).SingleOrDefault();

@@ -6,7 +6,6 @@ namespace HowsYourDayApi.Domain.Interfaces
     {
         Task<IEnumerable<DayEntryDto>> GetDayEntriesAsync();
         Task<DayEntryDto?> GetDayEntryAsync(Guid dayEntryId);
-        Task<int> GetAverageRatingAsync();
         Task<bool> HasUserPostedTodayAsync(Guid userId);
         Task<IEnumerable<DayEntryDto>> GetDaysEntriesOfUserAsync(Guid userId);
         Task<DayEntryDto> GetDayEntryOfUserTodayAsync(Guid userId);
