@@ -47,7 +47,7 @@ namespace HowsYourDayApi.API.Controllers
         }
 
         [HttpGet("account/day/today")]
-        public async Task<ActionResult<CreateDayEntryDto>> GetUserDayToday()
+        public async Task<ActionResult<CreateDayEntryDto>> GetDayEntryOfUserToday()
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
 
@@ -57,7 +57,7 @@ namespace HowsYourDayApi.API.Controllers
         }
 
         [HttpGet("account/day")]
-        public async Task<ActionResult<IEnumerable<DayEntry>>> GetDaysForUser()
+        public async Task<ActionResult<IEnumerable<DayEntry>>> GetDaysOfUser()
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
 
@@ -67,17 +67,35 @@ namespace HowsYourDayApi.API.Controllers
         }
 
         [HttpPost("account/day")]
-        public async Task<ActionResult<DayEntry>> PostDayForUser([FromBody] CreateDayEntryDto day)
+        public async Task<ActionResult<DayEntry>> CreateDayOfUser([FromBody] CreateDayEntryDto day)
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
 
             try
             {
-                await _dayService.AddDayEntryOfUserAsync(userId, day);
+                await _dayService.InsertDayEntryOfUserAsync(userId, day);
             }
             catch(Exception ex)
             {
                 return BadRequest($"An error occurred while posting your day: {ex.Message}");
+            }
+
+            return Created();
+            //return CreatedAtAction(nameof(GetUserDayToday), new { userId });
+        }
+
+        [HttpPut("account/day")]
+        public async Task<ActionResult<DayEntry>> EditDayOfUserToday([FromBody] CreateDayEntryDto day)
+        {
+            var userId = ClaimsPrincipalExtensions.GetUserId(User);
+
+            try
+            {
+                await _dayService.UpdateDayEntryOfUserTodayAsync(userId, day);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occurred while updating your day: {ex.Message}");
             }
 
             return Created();

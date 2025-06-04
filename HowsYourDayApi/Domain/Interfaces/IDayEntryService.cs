@@ -9,6 +9,7 @@ namespace HowsYourDayApi.Domain.Interfaces
         Task<bool> HasUserPostedTodayAsync(Guid userId);
         Task<IEnumerable<DayEntryDto>> GetDaysEntriesOfUserAsync(Guid userId);
         Task<DayEntryDto> GetDayEntryOfUserTodayAsync(Guid userId);
-        Task AddDayEntryOfUserAsync(Guid userId, CreateDayEntryDto day);
+        Task InsertDayEntryOfUserAsync(Guid userId, CreateDayEntryDto day);
+        Task UpdateDayEntryOfUserTodayAsync(Guid userId, CreateDayEntryDto day);
     }
 }

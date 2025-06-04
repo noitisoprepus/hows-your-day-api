@@ -86,12 +86,12 @@ namespace HowsYourDayApi.Application.Services
             return entryTodayDto;
         }
 
-        public async Task AddDayEntryOfUserAsync(Guid userId, CreateDayEntryDto createDayDto)
+        public async Task InsertDayEntryOfUserAsync(Guid userId, CreateDayEntryDto day)
         {
             if (userId == Guid.Empty)
                 throw new ArgumentException("User ID cannot be empty.", nameof(userId));
-            if (createDayDto == null)
-                throw new ArgumentNullException(nameof(createDayDto), "Day cannot be null.");
+            if (day == null)
+                throw new ArgumentNullException(nameof(day), "Day cannot be null.");
 
             var hasPostedToday = await HasUserPostedTodayAsync(userId);
 
@@ -103,11 +103,29 @@ namespace HowsYourDayApi.Application.Services
                 Id = Guid.NewGuid(),
                 UserId = userId,
                 LogDateUtc = DateTime.UtcNow,
-                Rating = createDayDto.Rating,
-                Note = createDayDto.Note
+                Rating = day.Rating,
+                Note = day.Note
             };
 
             await _dayRepository.InsertAsync(newDayEntry);
+        }
+
+        public async Task UpdateDayEntryOfUserTodayAsync(Guid userId, CreateDayEntryDto day)
+        {
+            if (userId == Guid.Empty)
+                throw new ArgumentException("User ID cannot be empty.", nameof(userId));
+            if (day == null)
+                throw new ArgumentNullException(nameof(day), "Day cannot be null.");
+
+            var entryToday = (await _dayRepository.SearchAsync(userId, DateTime.UtcNow)).SingleOrDefault();
+
+            if (entryToday == null)
+                throw new InvalidOperationException("User has not posted today.");
+
+            entryToday.Rating = day.Rating;
+            entryToday.Note = day.Note;
+
+            await _dayRepository.UpdateAsync(entryToday);
         }
     }
 }
