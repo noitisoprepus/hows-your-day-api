@@ -6,7 +6,7 @@ namespace HowsYourDayApi.Domain.Interfaces
     {
         Task<IEnumerable<DayEntry>> GetAllAsync();
         Task<DayEntry> GetByIdAsync(Guid id);
-        Task<IEnumerable<DayEntry>> SearchAsync(Guid userId, DateTime? from = null, DateTime? to = null);
+        Task<IEnumerable<DayEntry>> SearchAsync(Guid userId, DateTime? fromUtc = null, DateTime? toUtc = null);
         Task InsertAsync(DayEntry day);
         Task UpdateAsync(DayEntry day);
         Task DeleteAsync(DayEntry day);

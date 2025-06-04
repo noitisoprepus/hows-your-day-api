@@ -26,12 +26,12 @@ namespace HowsYourDayApi.Infrastructure.Repositories
                 ?? throw new KeyNotFoundException($"Day entry with ID {id} not found.");
         }
 
-        public async Task<IEnumerable<DayEntry>> SearchAsync(Guid userId, DateTime? from = null, DateTime? to = null)
+        public async Task<IEnumerable<DayEntry>> SearchAsync(Guid userId, DateTime? fromUtc = null, DateTime? toUtc = null)
         {
             return await _context.DayEntries
                 .Where(day => day.UserId == userId &&
-                              (!from.HasValue || day.LogDateUtc >= from) &&
-                              (!to.HasValue || day.LogDateUtc <= to))
+                              (!fromUtc.HasValue || day.LogDateUtc >= fromUtc) &&
+                              (!toUtc.HasValue || day.LogDateUtc <= toUtc))
                 .ToListAsync();
         }
 
