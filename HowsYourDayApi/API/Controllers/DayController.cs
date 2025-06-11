@@ -7,18 +7,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HowsYourDayApi.API.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class DayController : ControllerBase
     {
         private readonly IDayEntryService _dayService;
+        private readonly IDaySummaryService _daySummaryService;
 
-        public DayController(IDayEntryService dayService)
+        public DayController(IDayEntryService dayService, IDaySummaryService daySummaryService)
         {
             _dayService = dayService;
+            _daySummaryService = daySummaryService;
         }
 
-        [HttpGet("day")]
+        #region Day Entry
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<DayEntry>>> GetDays()
         {
             var days = await _dayService.GetDayEntriesAsync();
@@ -26,7 +30,7 @@ namespace HowsYourDayApi.API.Controllers
             return Ok(days);
         }
 
-        [HttpGet("day/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<DayEntry>> GetDay(Guid id)
         {
             var day = await _dayService.GetDayEntryAsync(id);
@@ -36,7 +40,7 @@ namespace HowsYourDayApi.API.Controllers
             return Ok(day);
         }
 
-        [HttpGet("account/day/status")]
+        [HttpGet("me/status")]
         public async Task<ActionResult<bool>> HasUserPostedToday()
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
@@ -46,8 +50,8 @@ namespace HowsYourDayApi.API.Controllers
             return Ok(hasPostedToday);
         }
 
-        [HttpGet("account/day/today")]
-        public async Task<ActionResult<CreateDayEntryDto>> GetDayEntryOfUserToday()
+        [HttpGet("me/today")]
+        public async Task<ActionResult<DayEntryDto>> GetDayEntryOfUserToday()
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
 
@@ -56,8 +60,8 @@ namespace HowsYourDayApi.API.Controllers
             return Ok(dayToday);
         }
 
-        [HttpGet("account/day")]
-        public async Task<ActionResult<IEnumerable<DayEntry>>> GetDaysOfUser()
+        [HttpGet("me/day")]
+        public async Task<ActionResult<IEnumerable<DayEntryDto>>> GetDaysOfUser()
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
 
@@ -66,7 +70,7 @@ namespace HowsYourDayApi.API.Controllers
             return Ok(days);
         }
 
-        [HttpPost("account/day")]
+        [HttpPost("me/day")]
         public async Task<ActionResult<DayEntry>> CreateDayOfUser([FromBody] CreateDayEntryDto day)
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
@@ -80,12 +84,11 @@ namespace HowsYourDayApi.API.Controllers
                 return BadRequest($"An error occurred while posting your day: {ex.Message}");
             }
 
-            return Created();
-            //return CreatedAtAction(nameof(GetUserDayToday), new { userId });
+            return CreatedAtAction(nameof(GetDayEntryOfUserToday), null);
         }
 
-        [HttpPut("account/day")]
-        public async Task<ActionResult<DayEntry>> EditDayOfUserToday([FromBody] CreateDayEntryDto day)
+        [HttpPut("me/day")]
+        public async Task<ActionResult<DayEntryDto>> EditDayOfUserToday([FromBody] CreateDayEntryDto day)
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
 
@@ -98,8 +101,8 @@ namespace HowsYourDayApi.API.Controllers
                 return BadRequest($"An error occurred while updating your day: {ex.Message}");
             }
 
-            return Created();
-            //return CreatedAtAction(nameof(GetUserDayToday), new { userId });
+            return CreatedAtAction(nameof(GetDayEntryOfUserToday), null);
         }
+        #endregion
     }
 }
