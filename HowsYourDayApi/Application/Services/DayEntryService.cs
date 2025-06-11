@@ -53,11 +53,14 @@ namespace HowsYourDayApi.Application.Services
             return entryToday != null;
         }
 
-        public async Task<IEnumerable<DayEntryDto>> GetDaysEntriesOfUserAsync(Guid userId)
+        public async Task<IEnumerable<DayEntryDto>> GetDayEntriesOfUserAsync(Guid userId, DateTime? fromUtc = null, DateTime? toUtc = null)
         {
-            // Retrieve all days for a specific user
-            var dayEntries = await _dayRepository.SearchAsync(userId);
+            if (userId == Guid.Empty)
+                throw new ArgumentException("User ID cannot be empty.", nameof(userId));
 
+            // Retrieve all days for a specific user within the specified date range
+            var dayEntries = await _dayRepository.SearchAsync(userId, fromUtc, toUtc);
+            
             // Map the day entries to DayEntryDto
             var dayEntriesDto = dayEntries.Select(entry => new DayEntryDto
             {
