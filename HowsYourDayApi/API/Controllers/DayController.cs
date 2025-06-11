@@ -9,11 +9,11 @@ namespace HowsYourDayApi.API.Controllers
 {
     [ApiController]
     [Authorize]
-    public class DayEntryController : ControllerBase
+    public class DayController : ControllerBase
     {
         private readonly IDayEntryService _dayService;
 
-        public DayEntryController(IDayEntryService dayService)
+        public DayController(IDayEntryService dayService)
         {
             _dayService = dayService;
         }
