@@ -1,5 +1,4 @@
 using HowsYourDayApi.Application.DTOs.Day;
-using HowsYourDayApi.Domain.Entities;
 using HowsYourDayApi.Domain.Interfaces;
 using HowsYourDayApi.Shared.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -22,56 +21,35 @@ namespace HowsYourDayApi.API.Controllers
         }
 
         #region Day Entry
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<DayEntry>>> GetDays()
+        [HttpGet("me/entry/today")]
+        public async Task<ActionResult<DayEntryDto>> GetEntryOfUserToday()
         {
-            var days = await _dayService.GetDayEntriesAsync();
+            var userId = ClaimsPrincipalExtensions.GetUserId(User);
+
+            var result = await _dayService.GetDayEntryOfUserTodayAsync(userId);
+
+            return Ok(result);
+        }
+
+        [HttpGet("me/entry")]
+        public async Task<ActionResult<IEnumerable<DayEntryDto>>> GetEntries([FromQuery] DateTime from, [FromQuery] DateTime to)
+        {
+            if (from > to)
+                return BadRequest("The 'from' date must be earlier than the 'to' date.");
+
+            // Convert to UTC if not already
+            from = from.ToUniversalTime();
+            to = to.ToUniversalTime();
+
+            var userId = ClaimsPrincipalExtensions.GetUserId(User);
+
+            var result = await _dayService.GetDayEntriesOfUserAsync(userId, from, to);
             
-            return Ok(days);
+            return Ok(result);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<DayEntry>> GetDay(Guid id)
-        {
-            var day = await _dayService.GetDayEntryAsync(id);
-            if (day == null)
-                return NotFound();
-            
-            return Ok(day);
-        }
-
-        [HttpGet("me/status")]
-        public async Task<ActionResult<bool>> HasUserPostedToday()
-        {
-            var userId = ClaimsPrincipalExtensions.GetUserId(User);
-
-            var hasPostedToday = await _dayService.HasUserPostedTodayAsync(userId);
-
-            return Ok(hasPostedToday);
-        }
-
-        [HttpGet("me/today")]
-        public async Task<ActionResult<DayEntryDto>> GetDayEntryOfUserToday()
-        {
-            var userId = ClaimsPrincipalExtensions.GetUserId(User);
-
-            var dayToday = await _dayService.GetDayEntryOfUserTodayAsync(userId);
-
-            return Ok(dayToday);
-        }
-
-        [HttpGet("me/day")]
-        public async Task<ActionResult<IEnumerable<DayEntryDto>>> GetDaysOfUser()
-        {
-            var userId = ClaimsPrincipalExtensions.GetUserId(User);
-
-            var days = await _dayService.GetDaysEntriesOfUserAsync(userId);
-
-            return Ok(days);
-        }
-
-        [HttpPost("me/day")]
-        public async Task<ActionResult<DayEntry>> CreateDayOfUser([FromBody] CreateDayEntryDto day)
+        [HttpPost("me/entry/today")]
+        public async Task<ActionResult<DayEntryDto>> CreateEntryOfUserToday([FromBody] CreateDayEntryDto day)
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
 
@@ -84,11 +62,11 @@ namespace HowsYourDayApi.API.Controllers
                 return BadRequest($"An error occurred while posting your day: {ex.Message}");
             }
 
-            return CreatedAtAction(nameof(GetDayEntryOfUserToday), null);
+            return CreatedAtAction(nameof(GetEntryOfUserToday), new {}, null);
         }
 
-        [HttpPut("me/day")]
-        public async Task<ActionResult<DayEntryDto>> EditDayOfUserToday([FromBody] CreateDayEntryDto day)
+        [HttpPut("me/entry/today")]
+        public async Task<ActionResult<DayEntryDto>> EditEntryOfUserToday([FromBody] CreateDayEntryDto day)
         {
             var userId = ClaimsPrincipalExtensions.GetUserId(User);
 
@@ -101,7 +79,7 @@ namespace HowsYourDayApi.API.Controllers
                 return BadRequest($"An error occurred while updating your day: {ex.Message}");
             }
 
-            return CreatedAtAction(nameof(GetDayEntryOfUserToday), null);
+            return CreatedAtAction(nameof(GetEntryOfUserToday), new {}, null);
         }
         #endregion
 
