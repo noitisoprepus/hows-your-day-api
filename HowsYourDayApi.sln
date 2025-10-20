@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HowsYourDayApi", "HowsYourD
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HowsYourDayApi.Tests", "..\HowsYourDayApi.Tests\HowsYourDayApi.Tests.csproj", "{39DA7842-BAC0-4576-94A9-950BB8440FA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HowsYourDayApi.Tests", "HowsYourDayApi.Tests\HowsYourDayApi.Tests.csproj", "{A1C56B6E-C2DE-EC07-CC10-37DE7E029F3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{39DA7842-BAC0-4576-94A9-950BB8440FA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{39DA7842-BAC0-4576-94A9-950BB8440FA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{39DA7842-BAC0-4576-94A9-950BB8440FA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{39DA7842-BAC0-4576-94A9-950BB8440FA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1C56B6E-C2DE-EC07-CC10-37DE7E029F3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1C56B6E-C2DE-EC07-CC10-37DE7E029F3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1C56B6E-C2DE-EC07-CC10-37DE7E029F3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1C56B6E-C2DE-EC07-CC10-37DE7E029F3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
